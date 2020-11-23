@@ -14,37 +14,48 @@ const App: FC = () => {
         setVisible(!visible);
     };
 
+    const addTodo = (todo: ITodo) => {
+        setList([...list, todo]);
+    };
 
-    const addTodo = (todo: ITodo) => setList([...list, todo]);
-    const deleteTodo = (key: number) => setList([...list.filter((_, dex) => (dex !== key))]);
-    const check = (key: number) => setList([...list.map((card, dex) => (dex === key ? { ...card, checked: !(card.checked) } : card))])
+    const deleteTodo = (key: number) => {
+        setList([...list.filter((_, dex) => dex !== key)]);
+    };
+
+    const check = (key: number) => {
+        setList([
+            ...list.map((card, dex) =>
+                dex === key ? { ...card, checked: !card.checked } : card,
+            ),
+        ]);
+    };
 
     return (
         <>
             <SafeAreaView style={styles.safeAreaView}>
-                <TodoList
-                    list={list}
-                    deleteTodo={deleteTodo}
-                    check={check}
+                <TodoList list={list} deleteTodo={deleteTodo} check={check} />
+                <Button
+                    onPress={toggleOverlay}
+                    icon={<Icon name="plus" color="white" size={20} />}
                 />
-                <Button onPress={toggleOverlay} icon={<Icon name='plus' color='white' size={20} />} />
-                <Overlay isVisible={visible} onBackdropPress={toggleOverlay} fullScreen>
-                    <Form
-                        addTodo={addTodo}
-                    />
+                <Overlay
+                    fullScreen
+                    isVisible={visible}
+                    onBackdropPress={toggleOverlay}>
+                    <Form addTodo={addTodo} />
                 </Overlay>
             </SafeAreaView>
         </>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     safeAreaView: {
-        flex: 1
+        flex: 1,
     },
     text: {
         textAlign: 'center',
     },
-})
+});
 
 export default App;
